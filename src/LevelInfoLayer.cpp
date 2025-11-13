@@ -12,6 +12,7 @@ class $modify(GrDInfoLayer, LevelInfoLayer) {
 
     struct Fields {
         bool m_hasBeenOpened = false;
+        bool m_initialized = false;
     };
     
     void updateDifficultyFace() {
@@ -21,64 +22,15 @@ class $modify(GrDInfoLayer, LevelInfoLayer) {
             return;
         }
 
-        // Get the original difficulty icon
-        CCSprite* originalIcon = nullptr;
-        bool iconFound = false;
-
-        // Iterate through every object that is a direct child of the layer to find the difficulty face.
-        CCObject* obj;
-        CCARRAY_FOREACH(this->getChildren(), obj) {
-            // Check to see if the object is a sprite.
-            if (CCSprite* newObj = dynamic_cast<CCSprite*>(obj)) {
-                // Check to see if the object is the demon difficulty icon
-                // Note that the child-index "stars-icon" doesn't appear to work all the time.
-                // Instead of using an absolute index, get the object that fits the following criteria:
-                if (newObj->getPosition() == m_difficultySprite->getPosition()
-                && newObj->getZOrder() == 3) {
-                    //newObj->setColor({0, 255, 0});
-                    originalIcon = newObj;
-                    iconFound = true;
-                    break;
-                }
-            }
-        }
-
-        // If the demon face somehow isn't found, notify the user.
-        if (originalIcon == nullptr || !iconFound) {
-            auto alert = FLAlertLayer::create("Error", "There was a problem loading the demon difficulty face.\nYour sceen resolution may not be supported.\n\n<cb>-Grandpa Demon</c>", "OK");
-            alert->m_scene = this;
-            alert->show();
-            return;
-        }
-
         CCSprite* newIcon = ListManager::getSpriteFromPosition(aredlPos, true);
         //CCSprite* newIcon = CCSprite::createWithSpriteFrameName("GrD_demon0_text.png"_spr);
         newIcon->setID("grd-difficulty");
         
-        auto newPos = originalIcon->getPosition();
-        newIcon->setPosition(originalIcon->getPosition());
-        newIcon->setZOrder(originalIcon->getZOrder()+10);
-        
+        auto newPos = m_difficultySprite->getPosition();
+        newIcon->setPosition(m_difficultySprite->getPosition());
+        newIcon->setZOrder(m_difficultySprite->getZOrder()+10);
 
-        CCObject* clearObj;
-        CCARRAY_FOREACH(originalIcon->getChildren(), clearObj) {
-            if (CCSprite* newObj = dynamic_cast<CCSprite*>(clearObj)) {
-                if (newObj->getTag() == 69420) {
-                    newObj->removeFromParentAndCleanup(true);
-                }
-            }
-        }
-
-        CCObject* iconObj;
-        CCARRAY_FOREACH(originalIcon->getChildren(), iconObj) {
-            if (CCSprite* newObj = dynamic_cast<CCSprite*>(iconObj)) {
-                newObj->setTag(69420);
-                this->addChild(newObj);
-                newObj->setPosition(newPos);
-            }
-        }
-
-        originalIcon->setVisible(false);
+        m_difficultySprite->setOpacity(0);
 
         this->addChild(newIcon);
         
@@ -134,6 +86,18 @@ class $modify(GrDInfoLayer, LevelInfoLayer) {
         return;
     }
 
+    bool init(GJGameLevel* level, bool challenge) {
+        if (!LevelInfoLayer::init(level, challenge)) return false;
+
+        m_fields->m_initialized = true;
+
+        if (!ListManager::demonIDList.empty() && level->m_stars == 10) {
+            updateDifficultyFace();
+        }
+
+        return true;
+    }
+
     void updateLabelValues() {
         LevelInfoLayer::updateLabelValues();
         if (ListManager::demonIDList.size() == 0) {
@@ -141,6 +105,10 @@ class $modify(GrDInfoLayer, LevelInfoLayer) {
         }
 
         if (this->m_level->m_stars != 10) {
+            return;
+        }
+
+        if (!m_fields->m_initialized) {
             return;
         }
         

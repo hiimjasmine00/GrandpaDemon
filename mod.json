@@ -1,10 +1,11 @@
 {
-	"geode": "3.0.0",
+	"geode": "4.9.0",
 	"version": "v1.2.0",
 	"gd": {
-		"win": "2.206",
-		"android": "2.206",
-		"mac": "2.206"
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
 	},
 	"id": "itzkiba.grandpa_demon",
 	"name": "Grandpa Demon",
@@ -23,6 +24,9 @@
 			"resources/GrD_demon4_bg.png"
 		]
     },
+	"dependencies": {
+		"geode.node-ids": ">=v1.10.0"
+	},
 	"settings": {
 		"grandpa-demon-disable": {
 			"name": "Disable Grandpa Demon",
@@ -44,5 +48,7 @@
 		}
 	},
 	"tags": ["online", "enhancement", "interface"],
-	"repository": "https://github.com/ItzKiba/GrandpaDemon"
+	"links": {
+		"source": "https://github.com/ItzKiba/GrandpaDemon"
+	}
 }

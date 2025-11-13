@@ -21,16 +21,18 @@ class $modify(MenuLayer) {
 
 		m_fields->m_listener.bind([] (web::WebTask::Event* e) {
             if (web::WebResponse* res = e->getValue()) {
-                auto str = res->string().unwrapOr("Failed.");
-				if (res->code() != 200 || str == "Failed." || str == "-1") {
+                if (!res->ok()) {
 					ListManager::firstTimeOpen = true;
 					ListManager::filterType = -2;
 					std::string errorStr = "\n\n<cr>Could not load data from AREDL.</c>\nThe API could be down, but chances are, your internet just sucks.\n\n<cg>Restart your game to try again.</c>\n\n<cb>-Grandpa Demon</c>";
-					FLAlertLayer::create("What the??", str + errorStr, "OK")->show();
+					FLAlertLayer::create("What the??", res->string().unwrapOrDefault() + errorStr, "OK")->show();
 					return;
 				}
 
-				ListManager::parseRequestString(str);
+				auto json = res->json().unwrapOrDefault();
+				if (!json.isArray()) return;
+
+				ListManager::parseRequest(json);
 		 		ListManager::firstTimeOpen = true;
 		 		ListManager::filterType = -1;
 			
@@ -38,7 +40,7 @@ class $modify(MenuLayer) {
         });
 
 		auto req = web::WebRequest();
-		m_fields->m_listener.setFilter(req.get("https://api.aredl.net/api/aredl/list"));
+		m_fields->m_listener.setFilter(req.get("https://api.aredl.net/v2/api/aredl/levels"));
 
 		// if (!ListManager::firstTimeOpen) {
 		// 	web::AsyncWebRequest()

@@ -1,7 +1,6 @@
 #ifndef LISTMANAGER_H
 #define LISTMANAGER_H
 #include <vector>
-#include <string>
 
 using namespace geode::prelude;
 
@@ -12,23 +11,17 @@ class ListManager {
         inline static int filterType;
         inline static bool isSupremeSearching;
 
-        inline static void parseRequestString(std::string str) {
-            size_t isFound = str.find("_id");
-
-            while (isFound != std::string::npos) {
-                str = str.substr(isFound + 5);
-                size_t findBracket = str.find("}");
-
-                int id = stoi(str.substr(0, findBracket));
-                demonIDList.push_back(id);
-
-                isFound = str.find("_id");
+        inline static void parseRequest(matjson::Value const& value) {
+            for (auto& item : value) {
+                if (auto levelID = item.get<int>("level_id")) {
+                    demonIDList.push_back(levelID.unwrap());
+                }
             }
         }
 
         inline static int getPositionOfID(int id) {
             for (unsigned int i = 0; i < demonIDList.size(); i++) {
-                if (demonIDList.at(i) == id) return i;
+                if (demonIDList[i] == id) return i;
             }
 
             return -1;
@@ -92,25 +85,25 @@ class ListManager {
                     }
                 }
             } 
+            return CCSprite::create();
         }
 
         inline static GJSearchObject* getSearchObject(int upper, int lower) {
-            std::stringstream download;
+            fmt::memory_buffer download;
             bool first = true;
             if (!(upper == 0 && lower == 0)) {
                 for (unsigned int i = upper; i > lower; i--) {
                     if (!first) {
-                        download << ",";
+                        download.push_back(',');
                     }
-                    download << std::to_string(ListManager::demonIDList.at(i));
+                    fmt::format_to(std::back_inserter(download), "{}", ListManager::demonIDList[i]);
                     first = false;
                 }
             } else {
-                download << std::to_string(ListManager::demonIDList.at(0));
+                fmt::format_to(std::back_inserter(download), "{}", ListManager::demonIDList[0]);
             }
             
-            download << "&gameVersion=22";
-            GJSearchObject* searchObj = GJSearchObject::create(SearchType::Type19, download.str());
+            GJSearchObject* searchObj = GJSearchObject::create(SearchType::Type19, fmt::to_string(download));
             return searchObj;
         }   
 

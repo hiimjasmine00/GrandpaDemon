@@ -11,7 +11,7 @@ class ParticleManager {
 
             dict->setObject(CCString::create("1"), "emitterType");
             dict->setObject(CCString::create("-1"), "duration");
-            dict->setObject(CCString::createWithFormat("%i", numParticles), "maxParticles");
+            dict->setObject(CCString::create(fmt::to_string(numParticles)), "maxParticles");
             dict->setObject(CCString::create("1.5"), "particleLifespan");
             dict->setObject(CCString::create("0.5"), "particleLifespanVariance");
             dict->setObject(CCString::create("90"), "angle");
@@ -53,6 +53,7 @@ class ParticleManager {
 
             auto emitter = CCParticleSystemQuad::create();
             emitter->initWithDictionary(dict, false);
+            dict->release();
             
             return emitter;
         }
@@ -64,7 +65,7 @@ class ParticleManager {
 
             dict->setObject(CCString::create("1"), "emitterType");
             dict->setObject(CCString::create("-1"), "duration");
-            dict->setObject(CCString::createWithFormat("%i", numParticles), "maxParticles");
+            dict->setObject(CCString::create(fmt::to_string(numParticles)), "maxParticles");
             dict->setObject(CCString::create("1.5"), "particleLifespan");
             dict->setObject(CCString::create("0.5"), "particleLifespanVariance");
             dict->setObject(CCString::create("90"), "angle");
@@ -106,6 +107,7 @@ class ParticleManager {
 
             auto emitter = CCParticleSystemQuad::create();
             emitter->initWithDictionary(dict, false);
+            dict->release();
             
             return emitter;
         }
@@ -117,7 +119,7 @@ class ParticleManager {
 
             dict->setObject(CCString::create("1"), "emitterType");
             dict->setObject(CCString::create("-1"), "duration");
-            dict->setObject(CCString::createWithFormat("%i", numParticles), "maxParticles");
+            dict->setObject(CCString::create(fmt::to_string(numParticles)), "maxParticles");
             dict->setObject(CCString::create("1.5"), "particleLifespan");
             dict->setObject(CCString::create("0.5"), "particleLifespanVariance");
             dict->setObject(CCString::create("90"), "angle");
@@ -167,6 +169,7 @@ class ParticleManager {
 
             auto emitter = CCParticleSystemQuad::create();
             emitter->initWithDictionary(dict, false);
+            dict->release();
             
             return emitter;
         }
@@ -176,7 +179,7 @@ class ParticleManager {
 
             dict->setObject(CCString::create("1"), "emitterType");
             dict->setObject(CCString::create("-1"), "duration");
-            dict->setObject(CCString::createWithFormat("%i", numParticles), "maxParticles");
+            dict->setObject(CCString::create(fmt::to_string(numParticles)), "maxParticles");
             dict->setObject(CCString::create("1.5"), "particleLifespan");
             dict->setObject(CCString::create("0.5"), "particleLifespanVariance");
             dict->setObject(CCString::create("90"), "angle");
@@ -218,6 +221,7 @@ class ParticleManager {
 
             auto emitter = CCParticleSystemQuad::create();
             emitter->initWithDictionary(dict, false);
+            dict->release();
             
             return emitter;
         }
