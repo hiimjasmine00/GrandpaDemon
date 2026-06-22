@@ -21,6 +21,10 @@ class $modify(GrDInfoLayer, LevelInfoLayer) {
         if (aredlPos == -1 || aredlPos > 499) {
             return;
         }
+        
+        if (m_fields->m_hasBeenOpened) {
+            return;
+        }
 
         CCSprite* newIcon = ListManager::getSpriteFromPosition(aredlPos, true);
         //CCSprite* newIcon = CCSprite::createWithSpriteFrameName("GrD_demon0_text.png"_spr);
@@ -33,10 +37,6 @@ class $modify(GrDInfoLayer, LevelInfoLayer) {
         m_difficultySprite->setOpacity(0);
 
         this->addChild(newIcon);
-        
-        if (m_fields->m_hasBeenOpened) {
-            return;
-        }
 
         if (aredlPos <= 24) {
             EffectsManager::infinityBackground(this, aredlPos);
